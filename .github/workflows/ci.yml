@@ -1,0 +1,42 @@
+name: Python Playwright Tests
+
+# When turn on workflow?
+on:
+  push:
+    branches: [ main ]      
+  pull_request:
+    branches: [ main ]      
+
+jobs:
+  test:
+    runs-on: ubuntu-latest   
+
+    steps:
+      # 1️⃣ copy code from repository
+      - uses: actions/checkout@v3
+
+      # 2️⃣ Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.14'   
+
+      # 3️⃣ install dependencies
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv sync
+          uv run playwright install
+
+      # 4️⃣ run all tests
+      - name: Run Tests
+        run: uv run pytest --headless --maxfail=1 --disable-warnings
+
+      # 5️⃣ Generate HTML report
+      - name: Generate HTML report
+        run: uv run pytest --html=report.html
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: pytest-report
+          path: report.html
