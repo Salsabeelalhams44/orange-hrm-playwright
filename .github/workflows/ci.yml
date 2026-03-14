@@ -1,0 +1,45 @@
+name: Python Playwright Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv sync
+          uv run playwright install --with-deps
+          pip install pylint pylint-pytest
+
+      - name: Run Tests
+        env:
+          ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
+          ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}
+          ORANGEHRM_BASE_URL: ${{ secrets.ORANGEHRM_BASE_URL }}
+        run: uv run pytest --maxfail=1 --disable-warnings --html=report.html
+        
+      # Run lint checks
+      - name: Lint tests
+        run: |
+          uv run pylint --load-plugins pylint_pytest
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: report.html
