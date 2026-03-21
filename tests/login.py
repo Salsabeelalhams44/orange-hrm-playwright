@@ -8,7 +8,7 @@ def login(page: Page) -> Page:
     base_url = os.getenv("ORANGEHRM_BASE_URL")
 
     page.goto(f"{base_url}/web/index.php/auth/login")
-    page.get_by_role("textbox", name="Username").fill(username)
-    page.get_by_role("textbox", name="Password").fill(password)
+    page.get_by_placeholder("Username").fill(username)
+    page.get_by_placeholder("Password").fill(password)
     page.get_by_role("button", name="Login").click()
     return page
