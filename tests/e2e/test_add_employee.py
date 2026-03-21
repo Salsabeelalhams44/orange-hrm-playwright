@@ -1,8 +1,4 @@
-import random
-
 from playwright.sync_api import Page, expect
-
-from tests.conftest import page
 
 # ===========================
 # 1️⃣ Basic mandatory fields
@@ -63,7 +59,7 @@ def test_add_employee_duplicate_id(logged_in_page: Page):
     employee_id_input = page.locator('.oxd-input-group:has-text("Employee Id") input')
     employee_id_input.wait_for()
     employee_id_input.fill(employee_id)
-    page.get_by_role("button", name="Save").click()    
+    page.get_by_role("button", name="Save").click()
     error_message = page.get_by_text("Employee Id already exists")
     if error_message.is_visible():
         assert True
@@ -126,7 +122,7 @@ def test_duplicate_name_different_id(logged_in_page: Page):
     page.get_by_placeholder("First Name").fill("Bahaa")
     page.get_by_placeholder("Last Name").fill("Kareem")
     page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
-    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("69035")  
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("69035")
     page.get_by_role("button", name="Save").click()
     # Wait until employee profile page opens
     #expect(page.locator('h6').filter(has_text="Personal Details")).to_be_visible()
@@ -136,13 +132,13 @@ def test_duplicate_name_different_id(logged_in_page: Page):
     page.get_by_placeholder("First Name").fill("Bahaa")
     page.get_by_placeholder("Last Name").fill("Kareem")
     page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
-    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("58735")  
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("58735")
     page.get_by_role("button", name="Save").click()
     # ---- Verify duplicate ----
     page.wait_for_url("**/pim/viewPersonalDetails/**")
     expect(page.get_by_placeholder("First Name")).to_have_value("Bahaa")
     expect(page.get_by_placeholder("Last Name")).to_have_value("Kareem")
-    
+
 
 # ===========================
 # 🔟 Multiple Additions Auto IDs
@@ -154,15 +150,15 @@ def add_employee(page: Page,first_name, last_name):
     page.get_by_placeholder("Last Name").fill(last_name)
     page.get_by_role("button", name="Save").click()
     page.wait_for_url("**/pim/viewPersonalDetails/**")
-    page.wait_for_load_state("networkidle")  
+    page.wait_for_load_state("networkidle")
 
-    
+
 def get_employee_id(page: Page):
     page.wait_for_load_state("networkidle")  # Ensure page is loaded
     employee_id_locator = page.locator('.oxd-input-group:has-text("Employee Id") input')
     employee_id_locator.wait_for()
     return int(employee_id_locator.input_value())
-    
+
 def test_multiple_additions_auto_ids(logged_in_page: Page):
     page = logged_in_page
     # Add first employee

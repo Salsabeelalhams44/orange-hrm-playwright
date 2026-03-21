@@ -5,10 +5,10 @@ from tests.login import login
 
 
 @pytest.fixture
-def page(browser) -> Page:
+def page(browser):
     context = browser.new_context()
-    page = context.new_page()
-    yield page
+    playwright_page = context.new_page()
+    yield playwright_page
     context.close()
 
 
