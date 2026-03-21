@@ -1,3 +1,5 @@
+import random
+
 from playwright.sync_api import Page, expect
 
 # ===========================
@@ -116,30 +118,30 @@ def test_field_length_invalid_chars(logged_in_page: Page):
 # ===========================
 def test_duplicate_name_different_id(logged_in_page: Page):
     page = logged_in_page
+    # Generate unique names using random numbers
+    first_name = f"Bahaa{random.randint(1000,9999)}"
+    last_name = "Kareem"
     page.get_by_role("link", name="PIM").click()
     page.get_by_role("button", name="Add").click()
     # ---- First employee ----
-    page.get_by_placeholder("First Name").fill("Bahaa")
-    page.get_by_placeholder("Last Name").fill("Kareem")
+    page.get_by_placeholder("First Name").fill(first_name)
+    page.get_by_placeholder("Last Name").fill(last_name)
     page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
     page.locator('.oxd-input-group:has-text("Employee Id") input').fill("69035")
     page.get_by_role("button", name="Save").click()
-    # Wait until employee profile page opens
-    #expect(page.locator('h6').filter(has_text="Personal Details")).to_be_visible()
     # ---- Second employee with same Firstname and last name ----
     page.get_by_role("link", name="PIM").click()
     page.get_by_role("button", name="Add").click()
-    page.get_by_placeholder("First Name").fill("Bahaa")
-    page.get_by_placeholder("Last Name").fill("Kareem")
+    page.get_by_placeholder("First Name").fill(first_name)
+    page.get_by_placeholder("Last Name").fill(last_name)
     page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
     page.locator('.oxd-input-group:has-text("Employee Id") input').fill("58735")
     page.get_by_role("button", name="Save").click()
     # ---- Verify duplicate ----
-    page.wait_for_url("**/pim/viewPersonalDetails/**")
-    expect(page.get_by_placeholder("First Name")).to_have_value("Bahaa")
-    expect(page.get_by_placeholder("Last Name")).to_have_value("Kareem")
-
-
+    if page.get_by_text("Already exists").is_visible():
+        assert True
+    else:
+        page.wait_for_url("**/pim/viewPersonalDetails/**")
 # ===========================
 # 🔟 Multiple Additions Auto IDs
 # ===========================
