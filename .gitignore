@@ -206,3 +206,14 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project specific ignores
+
+# Test artifacts
+report.html
+
+# Local editor settings
+.vscode/
+
+# Assets (images, uploads, etc.)
+assets/
