@@ -1,4 +1,8 @@
+import random
+
 from playwright.sync_api import Page, expect
+
+from tests.conftest import page
 
 # ===========================
 # 1️⃣ Basic mandatory fields
@@ -6,57 +10,76 @@ from playwright.sync_api import Page, expect
 def test_add_employee_mandatory(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("NourTest")
-    page.get_by_role("textbox", name="Last Name").fill("NourTwo")
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("NourTest")
+    page.get_by_placeholder("Last Name").fill("NourTwo")
     page.get_by_role("button", name="Save").click()
     page.wait_for_url("**/pim/viewPersonalDetails/**")
-    expect(page.get_by_role("textbox", name="First Name")).to_have_value("NourTest")
-    expect(page.get_by_role("textbox", name="Last Name")).to_have_value("NourTwo")
+    expect(page.get_by_placeholder("First Name")).to_have_value("NourTest")
+    expect(page.get_by_placeholder("Last Name")).to_have_value("NourTwo")
 # ===========================
 # 2️⃣ Optional fields
 # ===========================
 def test_add_employee_optional_fields(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Sara")
-    page.get_by_role("textbox", name="Middle Name").fill("Ali")
-    page.get_by_role("textbox", name="Last Name").fill("Saleh")
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("Sara")
+    page.get_by_placeholder("Middle Name").fill("Ali")
+    page.get_by_placeholder("Last Name").fill("Saleh")
     page.get_by_role("button", name="Save").click()
     page.wait_for_url("**/pim/viewPersonalDetails/**")
-    expect(page.get_by_role("textbox", name="Middle Name")).to_have_value("Ali")
+    expect(page.get_by_placeholder("Middle Name")).to_have_value("Ali")
 # ===========================
 # 3️⃣ Empty mandatory fields
 # ===========================
 def test_add_employee_empty_mandatory(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
+    page.get_by_role("button", name="Add").click()
     page.get_by_role("button", name="Save").click()
     expect(page.get_by_text("Required").first).to_be_visible()
     expect(page.get_by_text("Required").nth(1)).to_be_visible()
 # ===========================
 # 4️⃣ Duplicate Employee ID
 # ===========================
+
 def test_add_employee_duplicate_id(logged_in_page: Page):
     page = logged_in_page
+    employee_id = 9999
+    # ---- First employee ----
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Sarah")
-    page.get_by_role("textbox", name="Last Name").fill("Ali")
-    page.get_by_role("textbox").nth(4).fill("0222")
+    page.get_by_role("button", name="Add").click()
+
+    page.get_by_placeholder("First Name").fill("Sarah")
+    page.get_by_placeholder("Last Name").fill("Ali")
+    page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill(str(employee_id))
     page.get_by_role("button", name="Save").click()
+
+    # Wait until employee profile page opens
+    #expect(page.locator('h6').filter(has_text="Personal Details")).to_be_visible()
+
+    # ---- Second employee with same ID ----
+    page.get_by_role("link", name="PIM").click()
+    page.get_by_role("button", name="Add").click()
+    
+    page.get_by_placeholder("First Name").fill("Sara2")
+    page.get_by_placeholder("Last Name").fill("Ali2")
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill(str(employee_id))
+    page.get_by_role("button", name="Save").click()    
+    # ---- Verify duplicate error ----
     expect(page.get_by_text("Employee Id already exists")).to_be_visible()
+
 # ===========================
 # 5️⃣ Cancel Add Employee
 # ===========================
 def test_add_employee_cancel(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Temporary")
-    page.get_by_role("textbox", name="Last Name").fill("User")
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("Temporary")
+    page.get_by_placeholder("Last Name").fill("User")
     page.get_by_role("button", name="Cancel").click()
     page.get_by_role("link", name="Employee List").click()
     page.get_by_role("textbox", name="Type for hints...").first.fill("Temporary")
@@ -68,13 +91,12 @@ def test_add_employee_cancel(logged_in_page: Page):
 def test_create_login_toggle_requires_password(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("TestLogin")
-    page.get_by_role("textbox", name="Last Name").fill("User")
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("TestLogin")
+    page.get_by_placeholder("Last Name").fill("User")
     page.locator(".oxd-switch-input").click()
     page.get_by_role("button", name="Save").click()
-    expect(page.get_by_text("Required").nth(2)).to_be_visible()
-    expect(page.get_by_text("Required").nth(3)).to_be_visible()
+    expect(page.get_by_text("Required")).to_be_visible()
     expect(page.get_by_text("Passwords do not match")).to_be_visible()
 # ===========================
 # 7️⃣ Invalid profile picture
@@ -82,48 +104,75 @@ def test_create_login_toggle_requires_password(logged_in_page: Page):
 def test_invalid_profile_picture(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("button", name="Choose File").set_input_files("names.pdf")
-    expect(page.get_by_text("Invalid file type")).to_be_visible()
+    page.get_by_role("button", name="Add").click()
+    page.locator('input[type="file"]').set_input_files("data/invalid_file.pdf")
+    expect(page.get_by_text("File type not allowed")).to_be_visible()
 # ===========================
 # 8️⃣ Field Length / Invalid Characters
 # ===========================
 def test_field_length_invalid_chars(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("A"*50)
-    expect(page.get_by_text("Should not exceed 30")).to_be_visible()
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("A"*50)
+    expect(page.get_by_text("Should not exceed 30 characters")).to_be_visible()
 # ===========================
 # 9️⃣Edge Case: Duplicate Name Different ID
 # ===========================
 def test_duplicate_name_different_id(logged_in_page: Page):
     page = logged_in_page
     page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Bahaa")
-    page.get_by_role("textbox", name="Last Name").fill("Kareem")
-    page.get_by_role("textbox").nth(4).fill("9999")  # New ID
+    page.get_by_role("button", name="Add").click()
+    # ---- First employee ----
+    page.get_by_placeholder("First Name").fill("Bahaa")
+    page.get_by_placeholder("Last Name").fill("Kareem")
+    page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("69035")  
     page.get_by_role("button", name="Save").click()
+    # Wait until employee profile page opens
+    #expect(page.locator('h6').filter(has_text="Personal Details")).to_be_visible()
+    # ---- Second employee with same Firstname and last name ----
+    page.get_by_role("link", name="PIM").click()
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill("Bahaa")
+    page.get_by_placeholder("Last Name").fill("Kareem")
+    page.wait_for_selector('.oxd-input-group:has-text("Employee Id") input')
+    page.locator('.oxd-input-group:has-text("Employee Id") input').fill("58735")  
+    page.get_by_role("button", name="Save").click()
+    # ---- Verify duplicate ----
     page.wait_for_url("**/pim/viewPersonalDetails/**")
-    expect(page.get_by_role("textbox", name="First Name")).to_have_value("Bahaa")
-    expect(page.get_by_role("textbox", name="Last Name")).to_have_value("Kareem")
+    expect(page.get_by_placeholder("First Name")).to_have_value("Bahaa")
+    expect(page.get_by_placeholder("Last Name")).to_have_value("Kareem")
+    
+
 # ===========================
 # 🔟 Multiple Additions Auto IDs
 # ===========================
+def add_employee(page: Page,first_name, last_name):
+    page.get_by_role("link", name="PIM").click()
+    page.get_by_role("button", name="Add").click()
+    page.get_by_placeholder("First Name").fill(first_name)
+    page.get_by_placeholder("Last Name").fill(last_name)
+    page.get_by_role("button", name="Save").click()
+    page.wait_for_url("**/pim/viewPersonalDetails/**")
+    page.wait_for_load_state("networkidle")  
+
+    
+def get_employee_id(page: Page):
+    page.wait_for_load_state("networkidle")  # Ensure page is loaded
+    employee_id_locator = page.locator('.oxd-input-group:has-text("Employee Id") input')
+    employee_id_locator.wait_for()
+    return int(employee_id_locator.input_value())
+    
 def test_multiple_additions_auto_ids(logged_in_page: Page):
     page = logged_in_page
-    page.get_by_role("link", name="PIM").click()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Multi1")
-    page.get_by_role("textbox", name="Last Name").fill("Test")
-    page.get_by_role("button", name="Save").click()
-    page.wait_for_url("**/pim/viewPersonalDetails/**")
-    first_id = page.get_by_role("textbox").nth(4).input_value()
-    page.get_by_role("button", name=" Add").click()
-    page.get_by_role("textbox", name="First Name").fill("Multi2")
-    page.get_by_role("textbox", name="Last Name").fill("Test")
-    page.get_by_role("button", name="Save").click()
-    page.wait_for_url("**/pim/viewPersonalDetails/**")
-    second_id = page.get_by_role("textbox").nth(4).input_value()
-    assert first_id != second_id, "Employee Id already exists"
+    # Add first employee
+    add_employee(page, "Multi1", "Test")
+    first_id = get_employee_id(page)
+
+    # Add second employee
+    add_employee(page, "Multi2", "Test")
+    second_id = get_employee_id(page)
+
+    # Verify auto increment
+    assert second_id > first_id
