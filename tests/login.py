@@ -11,4 +11,6 @@ def login(page: Page) -> Page:
     page.get_by_placeholder("Username").fill(username)
     page.get_by_placeholder("Password").fill(password)
     page.get_by_role("button", name="Login").click()
+    page.wait_for_selector("h6:has-text('Dashboard')", timeout=30000)
     return page
+
