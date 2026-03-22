@@ -1,6 +1,7 @@
 import os
 import pytest
 from playwright.sync_api import Page
+from pages.login_page import LoginPage
 from tests.login import login
 
 
@@ -18,9 +19,21 @@ def goto(page: Page):
     base_url = os.getenv("ORANGEHRM_BASE_URL")
     if not base_url:
         raise ValueError("ORANGEHRM_BASE_URL is not set")
-    page.goto(f"{base_url}/web/index.php/auth/login", wait_until="domcontentloaded", timeout=300000)
+    page.goto(
+        f"{base_url}/web/index.php/auth/login",
+        wait_until="networkidle",
+        timeout=300000,
+    )
+    page.wait_for_selector('input[placeholder="Username"]', timeout=30000)
     return page
 
+
 @pytest.fixture
-def logged_in_page(page: Page) -> Page:
-    return login(page)
+def login_page(page: Page):
+    return LoginPage(page)
+
+
+@pytest.fixture
+def login_success(page: Page):
+    login_page = LoginPage(page)
+    login_page.login_with_valid_credentials("Admin", "admin123")

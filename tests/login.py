@@ -1,6 +1,7 @@
 import os
 from playwright.sync_api import Page
 
+
 def login(page: Page) -> Page:
     """Login to OrangeHRM using environment secrets"""
     username = os.getenv("ORANGEHRM_USERNAME")
