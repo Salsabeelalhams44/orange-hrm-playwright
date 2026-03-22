@@ -2,7 +2,6 @@ import os
 import pytest
 from playwright.sync_api import Page
 from pages.login_page import LoginPage
-from tests.login import login
 
 
 @pytest.fixture
@@ -35,5 +34,6 @@ def login_page(page: Page):
 
 @pytest.fixture
 def login_success(page: Page):
-    login_page = LoginPage(page)
-    login_page.login_with_valid_credentials("Admin", "admin123")
+    page_obj = LoginPage(page)
+    page_obj.login_with_valid_credentials("Admin", "admin123")
+    return page_obj
