@@ -1,6 +1,5 @@
 import os
 import pytest
-from pages.login_page import LoginPage
 
 
 @pytest.mark.parametrize(
@@ -10,7 +9,7 @@ from pages.login_page import LoginPage
         (os.getenv("ORANGEHRM_USERNAME"), os.getenv("ORANGEHRM_PASSWORD")),
     ],
 )
-def test_valid_login_to_orangehrm(login_page: LoginPage, username, password):
+def test_valid_login_to_orangehrm(login_page, username, password):
     login_page.login_with_valid_credentials(username, password)
 
 
@@ -33,9 +32,7 @@ def test_valid_login_to_orangehrm(login_page: LoginPage, username, password):
         # Latin username, Arabic password (tests mixed characters)
     ],
 )
-def test_invalid_login_to_orangehrm(
-    login_page: LoginPage, username, password, expected_error
-):
+def test_invalid_login_to_orangehrm(login_page, username, password, expected_error):
     login_page.login_with_credentials(username, password)
     if expected_error == "empty_username":
         login_page.empty_username_error()
