@@ -1,5 +1,5 @@
 import uuid
-from constants import MAX_USERNAME_LENGTH
+from utils.constants import MAX_USERNAME_LENGTH
 
 
 def fill_basic_info(page, first="Test", last="User"):
