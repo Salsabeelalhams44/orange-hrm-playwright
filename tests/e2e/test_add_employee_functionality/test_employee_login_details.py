@@ -13,7 +13,7 @@ from utils.constants import (
 
 
 @pytest.mark.parametrize(
-    "username, expected",
+    "username_type, expected",
     [
         ("valid", "success"),  # valid login details
         ("", "error"),  # empty username
