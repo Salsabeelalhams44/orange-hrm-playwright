@@ -1,3 +1,5 @@
+from curses import error
+
 from playwright.sync_api import Page, expect
 
 
@@ -124,7 +126,9 @@ class AddEmployeePage:
         return self.page.get_by_text("Required").first.is_visible()
 
     def is_duplicate_id_error(self):
-        return self.page.get_by_text("Employee Id already exists").is_visible()
+        error = self.page.get_by_text("Employee Id already exists")
+        error.wait_for(state="visible", timeout=10000)
+        return error.is_visible()
 
     def is_username_error_visible(self):
         errors = [
