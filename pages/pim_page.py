@@ -13,7 +13,9 @@ class PimPage:
 
     def navigate_to_pim(self):
         """Check navigation to pim page successful by verifying presence of PIM"""
-        self.page.get_by_text("PIM", exact=True).click()
+        pim_link = self.page.get_by_role("link", name="PIM")
+        expect(pim_link).to_be_visible(timeout=10000)
+        pim_link.click()
         actual_title = self.page.get_by_role("heading", name="PIM")
         expect(actual_title).to_be_visible()
 
