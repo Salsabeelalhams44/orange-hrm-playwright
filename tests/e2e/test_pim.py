@@ -1,5 +1,4 @@
 import pytest
-from pages.pim_page import PimPage
 
 
 @pytest.mark.parametrize(
@@ -10,6 +9,6 @@ from pages.pim_page import PimPage
     ],
 )
 def test_navigate_to_add_employee_page_successfully(
-    pim_page: PimPage, selector_role, selector_name
+    pim_page, selector_role, selector_name
 ):
     pim_page.navigate_to_add_employee(selector_role, selector_name)
