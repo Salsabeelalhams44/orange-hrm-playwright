@@ -27,6 +27,7 @@ jobs:
           pip install pylint pylint-pytest
 
       - name: Run Tests
+        timeout-minutes: 30  
         env:
           ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
           ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}

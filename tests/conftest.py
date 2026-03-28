@@ -3,6 +3,7 @@ import pytest
 from playwright.sync_api import Page
 from pages.login_page import LoginPage
 from pages.pim_page import PimPage
+from pages.PIM.add_employee_page import AddEmployeePage
 
 
 @pytest.fixture
@@ -44,3 +45,9 @@ def logged_in_page(login_page: LoginPage) -> Page:
 @pytest.fixture
 def pim_page(logged_in_page: Page):
     return PimPage(logged_in_page)
+
+
+@pytest.fixture
+def add_employee_page(pim_page: PimPage):
+    pim_page.navigate_to_add_employee("button", "Add")
+    return AddEmployeePage(pim_page.page)
