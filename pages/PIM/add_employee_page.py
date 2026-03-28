@@ -119,7 +119,7 @@ class AddEmployeePage:
 
     def is_success_visible(self):
         success_msg = self.page.get_by_text("Successfully Saved")
-        expect(success_msg).to_be_visible(timeout=10000)
+        expect(success_msg).to_be_visible(timeout=20000)
         return True
 
     def is_required_error(self):

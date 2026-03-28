@@ -15,15 +15,21 @@ from utils.constants import (
 @pytest.mark.parametrize(
     "username, expected",
     [
-        (generate_valid_unique_username(), "success"),  # valid login details
+        ("valid", "success"),  # valid login details
         ("", "error"),  # empty username
-        (generate_boundary_username(), "success"),  # boundary
+        ("boundary", "success"),  # boundary
         ("a" * (MAX_USERNAME_LENGTH + 1), "error"),  # username too long
         ("a" * (MIN_USERNAME_LENGTH - 1), "error"),  # username too short
     ],
 )
-def test_username_validation(add_employee_page, username, expected):
+def test_username_validation(add_employee_page, username_type, expected):
     fill_basic_info(add_employee_page)
+    if username_type == "valid":
+        username = generate_valid_unique_username()
+    elif username_type == "boundary":
+        username = generate_boundary_username()
+    else:
+        username = username_type
 
     add_employee_page.toggle_login_details(True)
     add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
