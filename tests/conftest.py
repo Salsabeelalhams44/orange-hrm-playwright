@@ -51,3 +51,14 @@ def pim_page(logged_in_page: Page):
 def add_employee_page(pim_page: PimPage):
     pim_page.navigate_to_add_employee("button", "Add")
     return AddEmployeePage(pim_page.page)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def set_default_timeout(browser):
+    pass
+
+
+@pytest.fixture(scope="function", autouse=True)
+def increase_timeout(page: Page):
+    page.set_default_timeout(60000)  # 60s for all actions
+    page.set_default_navigation_timeout(90000)  # 90s for navigation
