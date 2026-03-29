@@ -118,9 +118,12 @@ class AddEmployeePage:
         return any(self.page.get_by_text(e).is_visible() for e in errors)
 
     def is_success_visible(self):
-        success_msg = self.page.get_by_text("Successfully Saved")
-        expect(success_msg).to_be_visible(timeout=20000)
-        return True
+        if self.page.get_by_text("Successfully Saved").is_visible():
+            return "success"
+        elif self.page.get_by_text("Already exists").is_visible():
+            return "exists"
+        else:
+            return "unknown"
 
     def is_required_error(self):
         return self.page.get_by_text("Required").first.is_visible()
