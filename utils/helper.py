@@ -1,3 +1,4 @@
+import time
 import uuid
 from utils.constants import MAX_USERNAME_LENGTH
 
@@ -8,8 +9,7 @@ def fill_basic_info(page, first="Test", last="User"):
 
 
 def generate_valid_unique_username():
-    unique_part = uuid.uuid4().hex[:8]  # Generate a unique 8-character string
-    return "user" + unique_part
+    return f"user_{uuid.uuid4().hex[:8]}"  # unique username with 8 chars
 
 
 def generate_boundary_username():

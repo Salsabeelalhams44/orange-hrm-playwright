@@ -1,6 +1,7 @@
 from unittest import result
 
 import pytest
+from pages.PIM import add_employee_page
 from utils.helper import (
     fill_basic_info,
     generate_boundary_username,
@@ -40,13 +41,10 @@ def test_username_validation(add_employee_page, username_type, expected):
     add_employee_page.fill_login_details(username, "Password123!", "Password123!")
 
     add_employee_page.click_save()
-
-    result = add_employee_page.is_success_visible()
-
     if expected == "success":
-        assert result == "success"
+        assert add_employee_page.is_success_visible()
     else:
-        assert result != "success"
+        assert add_employee_page.is_username_error_visible()
 
 
 @pytest.mark.parametrize(
@@ -73,12 +71,10 @@ def test_password_validation(add_employee_page, password, expected):
 
     add_employee_page.click_save()
 
-    result = add_employee_page.is_success_visible()
-
     if expected == "success":
-        assert result == "success"
+        assert add_employee_page.is_success_visible()
     else:
-        assert result != "success"
+        assert add_employee_page.is_password_error_visible()
 
 
 def test_password_mismatch(add_employee_page):

@@ -1,6 +1,4 @@
-from curses import error
-
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Page
 
 
 class AddEmployeePage:
@@ -104,7 +102,11 @@ class AddEmployeePage:
         return "Disabled"
 
     def fill_login_details(self, username, password, confirm_password):
-        self.page.get_by_role("textbox").nth(5).fill(username)
+        username_field = self.page.locator(
+            '.oxd-input-group:has-text("Username") input'
+        )
+        username_field.wait_for(state="visible", timeout=30000)
+        username_field.fill(username)
         self.page.locator('input[type="password"]').first.fill(password)
         self.page.locator('input[type="password"]').nth(1).fill(confirm_password)
 
@@ -118,12 +120,8 @@ class AddEmployeePage:
         return any(self.page.get_by_text(e).is_visible() for e in errors)
 
     def is_success_visible(self):
-        if self.page.get_by_text("Successfully Saved").is_visible():
-            return "success"
-        elif self.page.get_by_text("Already exists").is_visible():
-            return "exists"
-        else:
-            return "unknown"
+        self.page.wait_for_url("**/pim/viewPersonalDetails/**", timeout=60000)
+        return True
 
     def is_required_error(self):
         return self.page.get_by_text("Required").first.is_visible()
