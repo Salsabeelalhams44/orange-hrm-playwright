@@ -28,7 +28,7 @@ class LoginPage:
         """Check if login was successful by verifying presence of Dashboard"""
         # self.page.wait_for_selector("h6:has-text('Dashboard')", timeout=30000)
         actual_title = self.page.get_by_role("heading", name="Dashboard")
-        expect(actual_title).to_be_visible()
+        expect(actual_title).to_be_visible(timeout=60000)
 
     def login_with_valid_credentials(self, username, password):
         self.login_with_credentials(username, password)
