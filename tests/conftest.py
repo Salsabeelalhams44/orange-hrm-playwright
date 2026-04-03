@@ -6,6 +6,17 @@ from pages.pim_page import PimPage
 from pages.PIM.add_employee_page import AddEmployeePage
 
 
+@pytest.fixture(scope="function")
+def context(browser):
+    context = browser.new_context(
+        record_video_dir="videos/",  # saves video for every test
+    )
+    context.tracing.start(screenshots=True, snapshots=True, sources=True)
+    yield context
+    context.tracing.stop(path="trace.zip")  # saves trace file
+    context.close()
+
+
 @pytest.fixture
 def page(browser):
     context = browser.new_context()
@@ -62,14 +73,3 @@ def set_default_timeout(browser):
 def increase_timeout(page: Page):
     page.set_default_timeout(60000)  # 60s for all actions
     page.set_default_navigation_timeout(90000)  # 90s for navigation
-
-
-@pytest.fixture(scope="function")
-def context(browser):
-    context = browser.new_context(
-        record_video_dir="videos/",  # saves video for every test
-    )
-    context.tracing.start(screenshots=True, snapshots=True, sources=True)
-    yield context
-    context.tracing.stop(path="trace.zip")  # saves trace file
-    context.close()

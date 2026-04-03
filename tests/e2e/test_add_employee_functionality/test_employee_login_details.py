@@ -1,7 +1,4 @@
-from unittest import result
-
 import pytest
-from pages.PIM import add_employee_page
 from utils.helper import (
     fill_basic_info,
     generate_boundary_username,
@@ -35,9 +32,7 @@ def test_username_validation(add_employee_page, username_type, expected):
         username = username_type
 
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
+
     add_employee_page.fill_login_details(username, "Password123!", "Password123!")
 
     add_employee_page.click_save()
@@ -62,9 +57,7 @@ def test_password_validation(add_employee_page, password, expected):
     fill_basic_info(add_employee_page)
 
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
+
     add_employee_page.fill_login_details(
         generate_valid_unique_username(), password, password
     )
@@ -81,9 +74,7 @@ def test_password_mismatch(add_employee_page):
     fill_basic_info(add_employee_page)
 
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
+
     add_employee_page.fill_login_details(
         generate_valid_unique_username(), "Password123!", "Password1234!"
     )
@@ -98,9 +89,6 @@ def test_employee_status(add_employee_page, status):
     fill_basic_info(add_employee_page)
 
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
 
     add_employee_page.fill_login_details(
         generate_valid_unique_username(), "Password123!", "Password123!"
@@ -117,9 +105,6 @@ def test_status_default_enabled(add_employee_page):
 
     # Enable login details
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
 
     # Verify default status
     assert add_employee_page.which_status_type_selected() == "Enabled"
@@ -130,9 +115,6 @@ def test_status_switch_to_disabled(add_employee_page):
 
     # Enable login details
     add_employee_page.toggle_login_details(True)
-    add_employee_page.page.get_by_role("textbox").nth(5).wait_for(
-        state="visible", timeout=10000
-    )
 
     # Change status
     add_employee_page.set_employee_status("Disabled")
