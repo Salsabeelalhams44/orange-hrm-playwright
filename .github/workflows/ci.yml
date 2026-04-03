@@ -40,7 +40,7 @@ jobs:
           ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
           ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}
           ORANGEHRM_BASE_URL: ${{ secrets.ORANGEHRM_BASE_URL }}
-        run: uv run pytest --maxfail=1 --disable-warnings --html=report.html
+        run: uv run pytest --maxfail=1 --disable-warnings --alluredir=allure-results
 
       - name: Upload Test Artifacts
         if: always()    # upload even if tests fail
@@ -52,6 +52,7 @@ jobs:
             videos/
             trace.zip
           retention-days: 7
+
       - name: Upload Allure Results
         if: always()
         uses: actions/upload-artifact@v4
