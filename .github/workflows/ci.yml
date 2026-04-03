@@ -52,3 +52,10 @@ jobs:
             videos/
             trace.zip
           retention-days: 7
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results/
+          retention-days: 7

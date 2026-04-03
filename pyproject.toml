@@ -12,6 +12,7 @@ dependencies = [
     "pylint-pytest",
     "ruff>=0.4.0",
     "pre-commit", 
+    "allure-pytest",
 ]
 [tool.pylint.messages_control]
 disable = ["missing-module-docstring", "missing-function-docstring"]
