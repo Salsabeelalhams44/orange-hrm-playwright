@@ -45,7 +45,7 @@ def login_page(page: Page):
 
 @pytest.fixture
 def logged_in_page(login_page: LoginPage) -> Page:
-    username = os.getenv("ORANGEHRM_USERNAME", "admin")
+    username = os.getenv("ORANGEHRM_USERNAME", "Admin")
     password = os.getenv("ORANGEHRM_PASSWORD", "admin123")
     login_page.login_with_valid_credentials(username, password)
     return login_page.page
