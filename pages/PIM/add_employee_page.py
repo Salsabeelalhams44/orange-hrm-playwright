@@ -39,17 +39,13 @@ class AddEmployeePage:
 
     def fill_employee_id(self, employee_id):
         """Fill the Employee ID field."""
-        employee_id_input = self.page.locator(
-            '.oxd-input-group:has-text("Employee Id") input'
-        )
+        employee_id_input = self.page.locator('.oxd-input-group:has-text("Employee Id") input')
         employee_id_input.wait_for(state="visible", timeout=10000)
         employee_id_input.fill(employee_id)
 
     def get_employee_id(self):
         """Retrieve the auto-generated Employee ID."""
-        employee_id_input = self.page.locator(
-            '.oxd-input-group:has-text("Employee Id") input'
-        )
+        employee_id_input = self.page.locator('.oxd-input-group:has-text("Employee Id") input')
         employee_id_input.wait_for(state="visible", timeout=10000)
         return employee_id_input.input_value()
 
@@ -94,17 +90,13 @@ class AddEmployeePage:
 
     def which_status_type_selected(self):
         """Check which status radio button is selected."""
-        enabled_radio = self.page.locator(
-            '.oxd-radio-wrapper:has-text("Enabled") input'
-        )
+        enabled_radio = self.page.locator('.oxd-radio-wrapper:has-text("Enabled") input')
         if enabled_radio.is_checked():
             return "Enabled"
         return "Disabled"
 
     def fill_login_details(self, username, password, confirm_password):
-        username_field = self.page.locator(
-            '.oxd-input-group:has-text("Username") input'
-        )
+        username_field = self.page.locator('.oxd-input-group:has-text("Username") input')
         username_field.wait_for(state="visible", timeout=30000)
         username_field.fill(username)
         self.page.locator('input[type="password"]').first.fill(password)

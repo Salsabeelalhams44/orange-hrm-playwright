@@ -1,12 +1,14 @@
 import os
+
 import pytest
 from playwright.sync_api import Page
+
 from pages.login_page import LoginPage
-from pages.pim_page import PimPage
 from pages.PIM.add_employee_page import AddEmployeePage
+from pages.pim_page import PimPage
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture
 def context(browser):
     ctx = browser.new_context(
         record_video_dir="videos/",  # saves video for every test
@@ -19,11 +21,10 @@ def context(browser):
 
 @pytest.fixture
 def page(context):
-    playwright_page = context.new_page()
-    yield playwright_page
+    return context.new_page()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def goto(page: Page):
     """Navigate to the base URL before each test."""
     base_url = os.getenv("ORANGEHRM_BASE_URL")
@@ -67,7 +68,7 @@ def set_default_timeout(browser):
     pass
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture(autouse=True)
 def increase_timeout(page: Page):
     page.set_default_timeout(60000)  # 60s for all actions
     page.set_default_navigation_timeout(90000)  # 90s for navigation

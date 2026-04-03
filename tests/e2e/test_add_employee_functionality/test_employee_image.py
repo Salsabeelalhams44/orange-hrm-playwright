@@ -4,7 +4,7 @@ from utils.helper import fill_basic_info
 
 
 @pytest.mark.parametrize(
-    "image_path, expected",
+    ("image_path", "expected"),
     [
         ("data/valid_image.jpg", "success"),
         ("data/invalid_file.pdf", "invalid"),

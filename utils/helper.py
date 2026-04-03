@@ -1,4 +1,5 @@
 import uuid
+
 from utils.constants import MAX_USERNAME_LENGTH
 
 

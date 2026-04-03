@@ -1,19 +1,20 @@
 import pytest
-from utils.helper import (
-    fill_basic_info,
-    generate_boundary_username,
-    generate_valid_unique_username,
-)
+
 from utils.constants import (
     MAX_PASSWORD_LENGTH,
     MAX_USERNAME_LENGTH,
     MIN_PASSWORD_LENGTH,
     MIN_USERNAME_LENGTH,
 )
+from utils.helper import (
+    fill_basic_info,
+    generate_boundary_username,
+    generate_valid_unique_username,
+)
 
 
 @pytest.mark.parametrize(
-    "username_type, expected",
+    ("username_type", "expected"),
     [
         ("valid", "success"),  # valid login details
         ("", "error"),  # empty username
@@ -43,7 +44,7 @@ def test_username_validation(add_employee_page, username_type, expected):
 
 
 @pytest.mark.parametrize(
-    "password, expected",
+    ("password", "expected"),
     [
         ("Password123!", "success"),  # valid password
         ("1234567", "error"),  # no letters
@@ -58,9 +59,7 @@ def test_password_validation(add_employee_page, password, expected):
 
     add_employee_page.toggle_login_details(True)
 
-    add_employee_page.fill_login_details(
-        generate_valid_unique_username(), password, password
-    )
+    add_employee_page.fill_login_details(generate_valid_unique_username(), password, password)
 
     add_employee_page.click_save()
 
@@ -75,9 +74,7 @@ def test_password_mismatch(add_employee_page):
 
     add_employee_page.toggle_login_details(True)
 
-    add_employee_page.fill_login_details(
-        generate_valid_unique_username(), "Password123!", "Password1234!"
-    )
+    add_employee_page.fill_login_details(generate_valid_unique_username(), "Password123!", "Password1234!")
 
     add_employee_page.click_save()
 
@@ -90,9 +87,7 @@ def test_employee_status(add_employee_page, status):
 
     add_employee_page.toggle_login_details(True)
 
-    add_employee_page.fill_login_details(
-        generate_valid_unique_username(), "Password123!", "Password123!"
-    )
+    add_employee_page.fill_login_details(generate_valid_unique_username(), "Password123!", "Password123!")
     add_employee_page.set_employee_status(status)
 
     add_employee_page.click_save()
