@@ -8,13 +8,13 @@ from pages.PIM.add_employee_page import AddEmployeePage
 
 @pytest.fixture(scope="function")
 def context(browser):
-    context = browser.new_context(
+    ctx = browser.new_context(
         record_video_dir="videos/",  # saves video for every test
     )
-    context.tracing.start(screenshots=True, snapshots=True, sources=True)
-    yield context
-    context.tracing.stop(path="trace.zip")  # saves trace file
-    context.close()
+    ctx.tracing.start(screenshots=True, snapshots=True, sources=True)
+    yield ctx
+    ctx.tracing.stop(path="trace.zip")  # saves trace file
+    ctx.close()
 
 
 @pytest.fixture
