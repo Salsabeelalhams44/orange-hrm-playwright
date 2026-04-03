@@ -18,11 +18,9 @@ def context(browser):
 
 
 @pytest.fixture
-def page(browser):
-    context = browser.new_context()
+def page(context):
     playwright_page = context.new_page()
     yield playwright_page
-    context.close()
 
 
 @pytest.fixture(scope="function", autouse=True)
