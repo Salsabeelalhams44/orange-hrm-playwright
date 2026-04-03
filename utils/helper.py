@@ -1,4 +1,3 @@
-import time
 import uuid
 from utils.constants import MAX_USERNAME_LENGTH
 
@@ -6,6 +5,8 @@ from utils.constants import MAX_USERNAME_LENGTH
 def fill_basic_info(page, first="Test", last="User"):
     page.fill_first_name(first)
     page.fill_last_name(last)
+    unique_id = str(uuid.uuid4().int)[:6]
+    page.fill_employee_id(unique_id)
 
 
 def generate_valid_unique_username():
