@@ -1,6 +1,9 @@
 from playwright.sync_api import Page, expect
 
+from utils.pw_trace import pw_trace_all
 
+
+@pw_trace_all
 class PimPage:
     """Page object for OrangeHRM PIM page actions and verifications.
     Methods:

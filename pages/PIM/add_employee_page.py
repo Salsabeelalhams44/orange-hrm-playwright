@@ -1,6 +1,9 @@
 from playwright.sync_api import Page
 
+from utils.pw_trace import pw_trace_all
 
+
+@pw_trace_all
 class AddEmployeePage:
     """Page object for OrangeHRM Add Employee page.
 
