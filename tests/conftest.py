@@ -32,7 +32,7 @@ def goto(page: Page):
         raise ValueError("ORANGEHRM_BASE_URL is not set")
     page.goto(
         f"{base_url}/web/index.php/auth/login",
-        wait_until="networkidle",
+        wait_until="domcontentloaded",
         timeout=300000,
     )
     page.wait_for_selector('input[placeholder="Username"]', timeout=60000)
