@@ -1,14 +1,20 @@
+import logging
+
 from playwright.sync_api import Page, expect
+
+logger = logging.getLogger(__name__)
 
 
 class LoginPage:
     """Page object for OrangeHRM login page actions and verifications.
     Methods:
-        login_with_credentials: fill username/password + click login.
-        login_with_valid_credentials: login + verify dashboard.
-        login_fail: verify invalid credentials message.
-        empty_username_error: verify required-username message.
-        empty_password_error: verify required-password message.
+       login_with_credentials: fill username/password + click login.
+       login_with_valid_credentials: login + verify dashboard.
+       login_successful: verify dashboard is visible.
+       login_fail: verify invalid credentials message.
+       empty_username_error: verify required-username message.
+       empty_password_error: verify required-password message.
+       logout: logout from OrangeHRM.
     """
 
     def __init__(self, page: Page):
@@ -48,3 +54,13 @@ class LoginPage:
         """Check for empty password error message"""
         error_message = self.page.get_by_text("Required").last
         expect(error_message).to_be_visible(timeout=60000)
+
+    def logout(self):
+        """Logout from OrangeHRM."""
+        base_url = self.page.url.split("/web/")[0]
+        self.page.goto(
+            f"{base_url}/web/index.php/auth/logout",
+            wait_until="networkidle",
+            timeout=30000,
+        )
+        logger.info("Logged out successfully")

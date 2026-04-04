@@ -1,4 +1,5 @@
 import os
+from asyncio.log import logger
 
 import pytest
 from playwright.sync_api import Page
@@ -45,11 +46,16 @@ def login_page(page: Page):
 
 
 @pytest.fixture
-def logged_in_page(login_page: LoginPage) -> Page:
+def logged_in_page(login_page: LoginPage):
     username = os.getenv("ORANGEHRM_USERNAME", "Admin")
     password = os.getenv("ORANGEHRM_PASSWORD", "admin123")
     login_page.login_with_valid_credentials(username, password)
-    return login_page.page
+
+    yield login_page.page
+
+    # TEARDOWN
+    login_page.logout()
+    logger.info("Cleanup: logged out successfully")
 
 
 @pytest.fixture
@@ -60,12 +66,22 @@ def pim_page(logged_in_page: Page):
 @pytest.fixture
 def add_employee_page(pim_page: PimPage):
     pim_page.navigate_to_add_employee("button", "Add")
-    return AddEmployeePage(pim_page.page)
+    emp_page = AddEmployeePage(pim_page.page)
 
+    # Capture display Employee ID before test runs
+    emp_id = emp_page.get_employee_id()
+    logger.info("Captured employee ID for cleanup: %s", emp_id)
 
-@pytest.fixture(scope="session", autouse=True)
-def set_default_timeout(browser):
-    pass
+    yield emp_page  # ← test runs here
+
+    # TEARDOWN
+    try:
+        if emp_id:
+            pim_page.delete_employee_by_id(emp_id)
+        else:
+            logger.info("Cleanup: no employee to delete")
+    except Exception as e:
+        logger.warning("Cleanup failed for employee %s: %s", emp_id, e)
 
 
 @pytest.fixture(autouse=True)
