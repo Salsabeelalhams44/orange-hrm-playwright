@@ -40,7 +40,7 @@ jobs:
           ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
           ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}
           ORANGEHRM_BASE_URL: ${{ secrets.ORANGEHRM_BASE_URL }}
-        run: uv run pytest --maxfail=1 --disable-warnings --alluredir=allure-results
+        run: uv run pytest --maxfail=1 --disable-warnings --html=report.html
 
       - name: Upload Test Artifacts
         if: always()    # upload even if tests fail
