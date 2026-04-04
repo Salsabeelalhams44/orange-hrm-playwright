@@ -1,5 +1,5 @@
+import logging
 import os
-from asyncio.log import logger
 
 import pytest
 from playwright.sync_api import Page
@@ -7,6 +7,8 @@ from playwright.sync_api import Page
 from pages.login_page import LoginPage
 from pages.PIM.add_employee_page import AddEmployeePage
 from pages.pim_page import PimPage
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture
@@ -80,8 +82,8 @@ def add_employee_page(pim_page: PimPage):
             pim_page.delete_employee_by_id(emp_id)
         else:
             logger.info("Cleanup: no employee to delete")
-    except Exception as e:
-        logger.warning("Cleanup failed for employee %s: %s", emp_id, e)
+    except (TimeoutError, ValueError) as e:
+        logger.warning("Cleanup failed: %s", e)
 
 
 @pytest.fixture(autouse=True)
