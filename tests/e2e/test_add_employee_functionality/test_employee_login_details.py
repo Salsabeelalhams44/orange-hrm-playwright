@@ -74,7 +74,9 @@ def test_password_mismatch(add_employee_page):
 
     add_employee_page.toggle_login_details(True)
 
-    add_employee_page.fill_login_details(generate_valid_unique_username(), "Password123!", "Password1234!")
+    add_employee_page.fill_login_details(
+        generate_valid_unique_username(), "Password123!", "Password1234!"
+    )
 
     add_employee_page.click_save()
 
@@ -87,7 +89,9 @@ def test_employee_status(add_employee_page, status):
 
     add_employee_page.toggle_login_details(True)
 
-    add_employee_page.fill_login_details(generate_valid_unique_username(), "Password123!", "Password123!")
+    add_employee_page.fill_login_details(
+        generate_valid_unique_username(), "Password123!", "Password123!"
+    )
     add_employee_page.set_employee_status(status)
 
     add_employee_page.click_save()
