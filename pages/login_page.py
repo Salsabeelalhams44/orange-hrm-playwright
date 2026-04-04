@@ -56,11 +56,9 @@ class LoginPage:
         expect(error_message).to_be_visible(timeout=60000)
 
     def logout(self):
-        """Logout from OrangeHRM."""
-        base_url = self.page.url.split("/web/")[0]
-        self.page.goto(
-            f"{base_url}/web/index.php/auth/logout",
-            wait_until="networkidle",
-            timeout=30000,
-        )
+        """Logout from OrangeHRM by clicking user menu and selecting Logout."""
+        self.page.locator(".oxd-userdropdown-tab").click()
+        self.page.get_by_role("menuitem", name="Logout").click()
+        self.page.wait_for_url("**/auth/login**", timeout=30000)
+        expect(self.page.get_by_placeholder("Username")).to_be_visible(timeout=30000)
         logger.info("Logged out successfully")

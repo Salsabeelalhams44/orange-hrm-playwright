@@ -44,7 +44,17 @@ def goto(page: Page):
 
 @pytest.fixture
 def login_page(page: Page):
-    return LoginPage(page)
+    yield LoginPage(page)
+
+    # TEARDOWN - logout if logged in
+    try:
+        if "auth/login" not in page.url:
+            LoginPage(page).logout()
+            logger.info("Cleanup: logged out successfully")
+        else:
+            logger.info("Cleanup: already on login page, no logout needed")
+    except (TimeoutError, ValueError) as e:
+        logger.warning("Cleanup failed: %s", e)
 
 
 @pytest.fixture
