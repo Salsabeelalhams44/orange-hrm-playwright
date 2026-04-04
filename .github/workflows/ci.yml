@@ -52,6 +52,17 @@ jobs:
             videos/
             trace.zip
           retention-days: 7
+      - name: Install Allure CLI
+        if: always()
+        run: |
+          wget -q https://github.com/allure-framework/allure2/releases/download/2.27.0/allure-2.27.0.tgz
+          tar -zxf allure-2.27.0.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
+      - name: Generate Allure Report
+        if: always()
+        run: allure generate allure-results --clean -o allure-report
 
       - name: Upload Allure Results
         if: always()
