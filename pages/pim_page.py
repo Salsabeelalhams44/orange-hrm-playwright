@@ -64,4 +64,8 @@ class PimPage:
 
     def is_employee_in_results_by_id(self, employee_id):
         """Check if specific employee ID appears in search results."""
-        return self.page.locator(".orangehrm-container").get_by_role("row", name=employee_id).is_visible()
+        return (
+            self.page.locator(".orangehrm-container")
+            .get_by_role("row", name=employee_id)
+            .is_visible()
+        )

@@ -25,7 +25,7 @@ addopts = [
 [tool.playwright]
 timeout = 60000  # 60 seconds default timeout for all actions
 [tool.ruff]
-line-length = 120
+line-length = 100
 exclude = [".venv", "__pycache__"]
 
 [tool.ruff.lint]
