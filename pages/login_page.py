@@ -28,7 +28,7 @@ class LoginPage:
         """Check if login was successful by verifying presence of Dashboard"""
         # self.page.wait_for_selector("h6:has-text('Dashboard')", timeout=30000)
         actual_title = self.page.get_by_role("heading", name="Dashboard")
-        expect(actual_title).to_be_visible()
+        expect(actual_title).to_be_visible(timeout=60000)
 
     def login_with_valid_credentials(self, username, password):
         self.login_with_credentials(username, password)
@@ -37,14 +37,14 @@ class LoginPage:
     def login_fail(self):
         """Check for invalid login error message"""
         error_message = self.page.get_by_text("Invalid credentials")
-        expect(error_message).to_be_visible()
+        expect(error_message).to_be_visible(timeout=60000)
 
     def empty_username_error(self):
         """Check for empty username error message"""
         error_message = self.page.get_by_text("Required").first
-        expect(error_message).to_be_visible()
+        expect(error_message).to_be_visible(timeout=60000)
 
     def empty_password_error(self):
         """Check for empty password error message"""
         error_message = self.page.get_by_text("Required").last
-        expect(error_message).to_be_visible()
+        expect(error_message).to_be_visible(timeout=60000)

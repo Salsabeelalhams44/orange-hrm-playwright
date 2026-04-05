@@ -1,9 +1,10 @@
 import os
+
 import pytest
 
 
 @pytest.mark.parametrize(
-    "username, password",
+    ("username", "password"),
     [
         ("admin", "admin123"),
         (os.getenv("ORANGEHRM_USERNAME"), os.getenv("ORANGEHRM_PASSWORD")),
@@ -14,7 +15,7 @@ def test_valid_login_to_orangehrm(login_page, username, password):
 
 
 @pytest.mark.parametrize(
-    "username, password, expected_error",
+    ("username", "password", "expected_error"),
     [
         ("invalid_user", "invalid_pass", "invalid_credentials"),
         # invalid username and invalid password

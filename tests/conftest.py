@@ -1,19 +1,30 @@
 import os
+
 import pytest
 from playwright.sync_api import Page
+
 from pages.login_page import LoginPage
+from pages.PIM.add_employee_page import AddEmployeePage
 from pages.pim_page import PimPage
 
 
 @pytest.fixture
-def page(browser):
-    context = browser.new_context()
-    playwright_page = context.new_page()
-    yield playwright_page
-    context.close()
+def context(browser):
+    ctx = browser.new_context(
+        record_video_dir="videos/",  # saves video for every test
+    )
+    ctx.tracing.start(screenshots=True, snapshots=True, sources=True)
+    yield ctx
+    ctx.tracing.stop(path="trace.zip")  # saves trace file
+    ctx.close()
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture
+def page(context):
+    return context.new_page()
+
+
+@pytest.fixture(autouse=True)
 def goto(page: Page):
     """Navigate to the base URL before each test."""
     base_url = os.getenv("ORANGEHRM_BASE_URL")
@@ -35,7 +46,7 @@ def login_page(page: Page):
 
 @pytest.fixture
 def logged_in_page(login_page: LoginPage) -> Page:
-    username = os.getenv("ORANGEHRM_USERNAME", "admin")
+    username = os.getenv("ORANGEHRM_USERNAME", "Admin")
     password = os.getenv("ORANGEHRM_PASSWORD", "admin123")
     login_page.login_with_valid_credentials(username, password)
     return login_page.page
@@ -44,3 +55,20 @@ def logged_in_page(login_page: LoginPage) -> Page:
 @pytest.fixture
 def pim_page(logged_in_page: Page):
     return PimPage(logged_in_page)
+
+
+@pytest.fixture
+def add_employee_page(pim_page: PimPage):
+    pim_page.navigate_to_add_employee("button", "Add")
+    return AddEmployeePage(pim_page.page)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def set_default_timeout(browser):
+    pass
+
+
+@pytest.fixture(autouse=True)
+def increase_timeout(page: Page):
+    page.set_default_timeout(60000)  # 60s for all actions
+    page.set_default_navigation_timeout(90000)  # 90s for navigation

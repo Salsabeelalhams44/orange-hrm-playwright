@@ -24,22 +24,31 @@ jobs:
           pip install uv
           uv sync
           uv run playwright install --with-deps
-          pip install pylint pylint-pytest
+
+      - name: Run Ruff Check
+        run: uv run ruff check .
+
+      - name: Run Ruff Format Check
+        run: uv run ruff format --check .
+
+      - name: Run Pylint
+        run: uv run pylint --load-plugins pylint_pytest tests/ pages/ utils/
 
       - name: Run Tests
+        timeout-minutes: 30  
         env:
           ORANGEHRM_USERNAME: ${{ secrets.ORANGEHRM_USERNAME }}
           ORANGEHRM_PASSWORD: ${{ secrets.ORANGEHRM_PASSWORD }}
           ORANGEHRM_BASE_URL: ${{ secrets.ORANGEHRM_BASE_URL }}
         run: uv run pytest --maxfail=1 --disable-warnings --html=report.html
 
-      # Run lint checks
-      - name: Lint tests
-        run: |
-          uv run pylint --load-plugins pylint_pytest tests/ pages/ utils/
-
-      - name: Upload report
+      - name: Upload Test Artifacts
+        if: always()    # upload even if tests fail
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-report
-          path: report.html
+          name: test-artifacts
+          path: |
+            report.html
+            videos/
+            trace.zip
+          retention-days: 7
