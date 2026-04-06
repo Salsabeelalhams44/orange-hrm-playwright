@@ -6,6 +6,7 @@ from playwright.sync_api import Page
 from pages.login_page import LoginPage
 from pages.PIM.add_employee_page import AddEmployeePage
 from pages.pim_page import PimPage
+from pages.recruitment_page import RecruitmentPage
 
 
 @pytest.fixture
@@ -32,7 +33,7 @@ def goto(page: Page):
         raise ValueError("ORANGEHRM_BASE_URL is not set")
     page.goto(
         f"{base_url}/web/index.php/auth/login",
-        wait_until="networkidle",
+        wait_until="domcontentloaded",
         timeout=300000,
     )
     page.wait_for_selector('input[placeholder="Username"]', timeout=60000)
@@ -72,3 +73,8 @@ def set_default_timeout(browser):
 def increase_timeout(page: Page):
     page.set_default_timeout(60000)  # 60s for all actions
     page.set_default_navigation_timeout(90000)  # 90s for navigation
+
+
+@pytest.fixture
+def recruitment_page(logged_in_page):
+    return RecruitmentPage(logged_in_page)

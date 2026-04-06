@@ -17,3 +17,13 @@ def generate_valid_unique_username():
 def generate_boundary_username():
     unique_part = uuid.uuid4().hex[: MAX_USERNAME_LENGTH - 4]  # 36 chars
     return "user" + unique_part  # exactly 40 chars
+
+
+def generate_unique_first_name():
+    """Generate a unique first name for test employees."""
+    return f"Test{uuid.uuid4().hex[:6]}"
+
+
+def generate_unique_vacancy_name():
+    """Generate unique vacancy name."""
+    return f"Vacancy_{uuid.uuid4().hex[:6]}"

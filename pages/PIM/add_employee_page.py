@@ -1,6 +1,9 @@
 from playwright.sync_api import Page
 
+from utils.pw_trace import pw_trace_all
 
+
+@pw_trace_all
 class AddEmployeePage:
     """Page object for OrangeHRM Add Employee page.
 
@@ -104,12 +107,21 @@ class AddEmployeePage:
 
     # ===== States ===============
 
-    def is_invalid_image_error(self):
+    def is_invalid_image_error(self) -> bool:
+        """Check if invalid image error is visible."""
         errors = [
             "File type not allowed",
             "Attachment Size Exceeded",
         ]
-        return any(self.page.get_by_text(e).is_visible() for e in errors)
+        for error in errors:
+            try:
+                error_locator = self.page.get_by_text(error)
+                error_locator.wait_for(state="visible", timeout=10000)
+                if error_locator.is_visible():
+                    return True
+            except Exception:  # pylint: disable=broad-exception-caught
+                continue
+        return False
 
     def is_success_visible(self):
         self.page.wait_for_url("**/pim/viewPersonalDetails/**", timeout=60000)
