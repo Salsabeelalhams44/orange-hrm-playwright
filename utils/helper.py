@@ -22,3 +22,8 @@ def generate_boundary_username():
 def generate_unique_first_name():
     """Generate a unique first name for test employees."""
     return f"Test{uuid.uuid4().hex[:6]}"
+
+
+def generate_unique_vacancy_name():
+    """Generate unique vacancy name."""
+    return f"Vacancy_{uuid.uuid4().hex[:6]}"
