@@ -57,9 +57,14 @@ class PimPage:
 
         return self.page.locator(".orangehrm-container").get_by_role("row").count()
 
-    def is_no_records_found(self):
-        """Check if no records found message is visible."""
-        return self.page.locator("#oxd-toaster_1").get_by_text("No Records Found").is_visible()
+    def is_no_records_found(self) -> bool:
+        """Check if no records found toast message is visible."""
+        toaster = self.page.locator("#oxd-toaster_1")
+        try:
+            toaster.wait_for(state="visible", timeout=10000)
+            return toaster.get_by_text("No Records Found").is_visible()
+        except Exception:  # pylint: disable=broad-exception-caught
+            return False
 
     def is_employee_in_results_by_name(self, name):
         """Check if specific employee name appears in search results."""
