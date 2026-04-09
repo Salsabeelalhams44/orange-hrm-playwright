@@ -12,11 +12,16 @@ dependencies = [
     "pylint-pytest",
     "ruff>=0.4.0",
     "pre-commit", 
+    "allure-pytest",
 ]
 [tool.pylint.messages_control]
 disable = ["missing-module-docstring", "missing-function-docstring"]
 [tool.pytest.ini_options]
 pythonpath = ["."]
+addopts = [
+    "--alluredir=allure-results",
+    "--clean-alluredir",
+]
 [tool.playwright]
 timeout = 60000  # 60 seconds default timeout for all actions
 [tool.ruff]
